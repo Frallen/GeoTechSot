@@ -1,9 +1,9 @@
 <template>
   <transition name="fade">
-    <div class="modal-wrapper" v-show="isShow" @click="ModalChanger(false)">
+    <div class="modal-wrapper" @click="emit('closeModal')">
       <div class="modal" @click.stop>
         <div class="modal-head">
-          <div class="icon" @click.stop="ModalChanger(false)">
+          <div class="icon" @click.stop="emit('closeModal')">
             <i class="pi pi-times"></i>
           </div>
         </div>
@@ -16,14 +16,9 @@
 </template>
 
 <script setup lang="ts">
-const {ModalChanger} = useMain()
 
-interface propsType {
-  isShow: boolean
-}
 
-const {isShow} = defineProps<propsType>()
-
+const emit = defineEmits<{ (e: "closeModal"): void }>()
 
 </script>
 
@@ -48,8 +43,10 @@ const {isShow} = defineProps<propsType>()
   flex-direction: column;
   padding: 20px 15px;
   min-width: 360px;
+  max-width: 360px;
   @media @sm {
     min-width: 320px;
+    max-width: 320px;
   }
 
   &-head {

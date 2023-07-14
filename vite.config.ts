@@ -32,6 +32,7 @@ export default defineConfig({
             imports: [
                 "vue",
                 '@vueuse/core',
+                "vue-router",
                 {"date-fns": ["date-fns"]},
                 {
                     "pinia": [

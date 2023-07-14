@@ -3,28 +3,52 @@ import {useCookies} from '@vueuse/integrations/useCookies'
 import {format} from "date-fns";
 
 interface stateType {
-    ModalState: boolean
+    TaskModalState: boolean
     isError: boolean
     Tasks: taskType[]
     Priority: priorityType[]
+    ListSearchQuery: string
+    ViewModalState:boolean
 }
 
 export const useMain = defineStore('main', {
     state: (): stateType => ({
         isError: false,
-        ModalState: false,
+        TaskModalState: false,
+        ViewModalState:false,
         Priority: [
             "Низкая",
             "Средняя",
             "Высокая",
             "Критическая"
         ],
-        Tasks: []
+        Tasks: [],
+        ListSearchQuery: ""
     }),
-    getters: {},
+    getters: {
+        preparedTaskList: (state) => {
+            return (pageNumber: number):taskType[] => {
+                const pageSize = 10; // Размер порции (количество записей на одной странице)
+                const startIndex = (pageNumber - 1) * pageSize; // Индекс начала порции записей
+                const endIndex = startIndex + pageSize; // Индекс конца порции записей
+
+                const data = state.Tasks.slice(startIndex, endIndex);
+                return state.ListSearchQuery
+                    ? data.filter((p) =>
+                        p.Message.toLowerCase().includes(state.ListSearchQuery.toLowerCase())
+                    )
+                    : data;
+            }
+        },
+
+    },
     actions: {
-        async ModalChanger(state: boolean) {
-            this.ModalState = state
+        async TaskModalChanger(state: boolean) {
+            this.TaskModalState = state
+            overFlow(state)
+        },
+        async ViewModalChanger(state: boolean) {
+            this.ViewModalState = state
             overFlow(state)
         },
         async PrepareTasks() {
@@ -55,6 +79,16 @@ export const useMain = defineStore('main', {
                         Owner: "Ветрова И.С.",
                         Priority: "Критическая",
                     }]
+                for (let i = 0; i <= 10; i++) {
+                    baseData.push({
+                        id: Math.random(),
+                        Date: format(new Date(), "dd/MM/yyyy"),
+                        Device: "ЛВС",
+                        Message: "Обрыв силового кабеля",
+                        Owner: "Ветрова И.С.",
+                        Priority: "Критическая",
+                    })
+                }
 
                 const {
                     get,
@@ -77,8 +111,8 @@ export const useMain = defineStore('main', {
         },
         async CreateTask(data: taskType) {
             try {
-                data.id=Math.random()
-                data.Date=format(new Date(data.Date), "dd/MM/yyyy")
+                data.id = Math.random()
+                data.Date = format(new Date(data.Date), "dd/MM/yyyy")
                 const {
                     get,
                     getAll,
@@ -95,7 +129,7 @@ export const useMain = defineStore('main', {
                     set("task", [data])
                 }
                 this.PrepareTasks()
-                this.ModalState = false
+                this.TaskModalState = false
             } catch (e) {
                 this.isError = true
             }

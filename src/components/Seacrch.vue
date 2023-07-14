@@ -2,15 +2,13 @@
   <div class="search">
     <span class="p-input-icon-left">
     <i class="pi pi-search"/>
-    <InputText v-model="inputValue" placeholder="Search"/>
+    <InputText v-model="ListSearchQuery" placeholder="Search"/>
 </span>
   </div>
 </template>
 <script setup lang="ts">
 import InputText from 'primevue/inputtext';
-
-const inputValue = ref<string>()
-//const {searchValue} = storeToRefs(useMain())
+const {ListSearchQuery} = storeToRefs(useMain())
 
 </script>
 <style scoped lang="less">

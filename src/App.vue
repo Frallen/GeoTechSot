@@ -1,13 +1,13 @@
 <template>
   <div>
     <Error v-if="isError"></Error>
-    <div v-else>
+    <div v-else class="container">
       <router-view v-slot="{ Component }">
         <suspense>
           <component :is="Component"/>
         </suspense>
       </router-view>
-      <Modal :isShow="ModalState">
+      <Modal :isShow="TaskModalState" v-show="TaskModalState" @closeModal="TaskModalChanger(false);">
         <Form class="form" @submit="CreateTask"
               v-slot="{ setFieldValue, setValues }"
               :validation-schema="TaskSchema()">
@@ -66,8 +66,8 @@
   </div>
 </template>
 <script setup lang="ts">
-
-const {isError, ModalState} = storeToRefs(useMain())
+const {TaskModalChanger} = useMain()
+const {isError, TaskModalState} = storeToRefs(useMain())
 import {Form, Field} from "vee-validate"
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';

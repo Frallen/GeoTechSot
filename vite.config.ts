@@ -17,7 +17,7 @@ export default defineConfig({
     plugins: [
         vue(),
         Components({
-            dirs: ['./src/components',"./src/pages"],
+            dirs: ['./src/components', "./src/pages"],
             dts: true
         }),
         AutoImport({
@@ -32,6 +32,7 @@ export default defineConfig({
             imports: [
                 "vue",
                 '@vueuse/core',
+                {"date-fns": ["date-fns"]},
                 {
                     "pinia": [
                         'storeToRefs',

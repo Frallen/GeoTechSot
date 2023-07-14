@@ -8,9 +8,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Error: typeof import('./src/components/Error.vue')['default']
+    Fg: typeof import('./src/components/fg.vue')['default']
     Index: typeof import('./src/pages/Index.vue')['default']
+    List: typeof import('./src/components/List.vue')['default']
+    Modal: typeof import('./src/components/Modal.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Seacrch: typeof import('./src/components/Seacrch.vue')['default']
+    Table: typeof import('./src/components/Table.vue')['default']
   }
 }

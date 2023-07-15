@@ -1,44 +1,47 @@
 <template>
   <div>
-    <div class="list">
-      <transition-group name="fade">
-        <Card class="list-item" :tabindex="item.id" @keydown.space.prevent="SetViewed(item.id)"
-              :class="{'viewed':item.viewed}"
-              v-for="item in preparedTaskList(currentPage)"
-              :key="item.id"
-        >
-          <template #header>
-            <div class="list-item-photo">
-              <Avatar label="P" size="xlarge" shape="circle"/>
+    <template v-if="Tasks&&Tasks.length>0">
+      <div class="list">
+        <transition-group name="fade">
+          <Card class="list-item" :tabindex="item.id" @keydown.space.prevent="SetViewed(item.id)"
+                :class="{'viewed':item.viewed}"
+                v-for="item in preparedTaskList(currentPage)"
+                :key="item.id"
+          >
+            <template #header>
+              <div class="list-item-photo">
+                <Avatar label="P" size="xlarge" shape="circle"/>
 
-            </div>
-          </template>
-          <template #title>
-            <div class="name">{{ item.Owner }}</div>
-          </template>
-          <template #subtitle> Card subtitle</template>
-          <template #content>
-            <div class="list-item-info">
-              <div class="info-item"><span class="title">Дата</span> {{ item.Date }}</div>
-              <div class="info-item"><span class="title">Оборудование</span> {{ item.Device }}</div>
-              <div class="info-item"><span class="title">Важность</span>
-                <Tag :severity="styledPriority(item.Priority)" :value="item.Priority"></Tag>
               </div>
-              <div class="info-item-text"><span class="title">Сообщение</span> {{ item.Message }}</div>
-            </div>
-          </template>
-          <template #footer>
-            <Button label="Окрыть" @click="ViewModalChanger(true),listItem=item" style="width: 100%"/>
-          </template>
-        </Card>
-      </transition-group>
-    </div>
-    <Paginator
-        class="paginator"
-        v-if="Tasks&&Tasks.length>0" @page="e=>currentPage=e.page+1" :rows="10"
-        :first="firstFromPage(currentPage, 10)"
-        :totalRecords="Tasks.length"
-        :rowsPerPageOptions="[10]"></Paginator>
+            </template>
+            <template #title>
+              <div class="name">{{ item.Owner }}</div>
+            </template>
+            <template #subtitle> Card subtitle</template>
+            <template #content>
+              <div class="list-item-info">
+                <div class="info-item"><span class="title">Дата</span> {{ item.Date }}</div>
+                <div class="info-item"><span class="title">Оборудование</span> {{ item.Device }}</div>
+                <div class="info-item"><span class="title">Важность</span>
+                  <Tag :severity="styledPriority(item.Priority)" :value="item.Priority"></Tag>
+                </div>
+                <div class="info-item-text"><span class="title">Сообщение</span> {{ item.Message }}</div>
+              </div>
+            </template>
+            <template #footer>
+              <Button label="Окрыть" @click="ViewModalChanger(true),listItem=item" style="width: 100%"/>
+            </template>
+          </Card>
+        </transition-group>
+      </div>
+      <Paginator
+          class="paginator"
+          @page="e=>currentPage=e.page+1" :rows="10"
+          :first="firstFromPage(currentPage, 10)"
+          :totalRecords="Tasks.length"
+          :rowsPerPageOptions="[10]"></Paginator>
+    </template>
+    <div class="empty"><h3>Не найдено задач</h3></div>
     <Modal v-if="ViewModalState" @closeModal="ViewModalChanger(false);">
       <div class="list-item-modal">
         <div class="list-item-info">
@@ -163,6 +166,11 @@ const firstFromPage = (page: number, perPage: number): number => {
     box-shadow: 0 0 5px #6366F1;
     transform: scale(0.9);
   }
+}
+
+.empty {
+  text-align: center;
+  margin: 20em 0;
 }
 
 .viewed {

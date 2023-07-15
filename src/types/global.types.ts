@@ -5,6 +5,7 @@ export interface taskType {
     Message: string
     Owner: string
     id:number,
+    viewed?:true,
 }
 
 export type priorityType = "Низкая" | "Средняя" | "Высокая" | "Критическая"

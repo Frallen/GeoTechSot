@@ -24,11 +24,8 @@
   </DataTable>
 </template>
 <script setup lang="ts">
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import {taskType} from "../types/global.types";
-import InputText from 'primevue/inputtext';
 import {FilterMatchMode} from 'primevue/api';
+import {taskType} from "../types/global.types";
 
 const selectedRow = ref()
 const filters = ref({

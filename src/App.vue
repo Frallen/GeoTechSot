@@ -69,10 +69,6 @@
 const {TaskModalChanger} = useMain()
 const {isError, TaskModalState} = storeToRefs(useMain())
 import {Form, Field} from "vee-validate"
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import Dropdown from 'primevue/dropdown';
-import Calendar from 'primevue/calendar';
 import {taskType} from "./types/global.types";
 
 const {CreateTask, Priority} = useMain()

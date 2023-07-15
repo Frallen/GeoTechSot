@@ -7,15 +7,23 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Avatar: typeof import('primevue/avatar')['default']
+    Button: typeof import('primevue/button')['default']
+    Calendar: typeof import('primevue/calendar')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
+    Dropdown: typeof import('primevue/dropdown')['default']
     Error: typeof import('./src/components/Error.vue')['default']
-    Fg: typeof import('./src/components/fg.vue')['default']
     Index: typeof import('./src/pages/Index.vue')['default']
+    InputText: typeof import('primevue/inputtext')['default']
     List: typeof import('./src/components/List.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']
-    Navigation: typeof import('./src/components/Navigation.vue')['default']
+    Paginator: typeof import('primevue/paginator')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Seacrch: typeof import('./src/components/Seacrch.vue')['default']
     Table: typeof import('./src/components/Table.vue')['default']
+    Tag: typeof import('primevue/tag')['default']
+    ToggleButton: typeof import('primevue/togglebutton')['default']
   }
 }

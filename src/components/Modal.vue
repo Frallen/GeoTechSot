@@ -16,10 +16,7 @@
 </template>
 
 <script setup lang="ts">
-
-
 const emit = defineEmits<{ (e: "closeModal"): void }>()
-
 </script>
 
 <style scoped lang="less">

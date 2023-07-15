@@ -7,7 +7,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import InputText from 'primevue/inputtext';
 const {ListSearchQuery} = storeToRefs(useMain())
 
 </script>

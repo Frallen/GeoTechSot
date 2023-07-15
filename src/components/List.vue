@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="list">
-      <div class="list-item" v-for="item in preparedTaskList(currentPage)" :key="item.id"
+      <div class="list-item" :class="{'viewed':item.viewed}" v-for="item in preparedTaskList(currentPage)"
+           :key="item.id"
            @click="e=>{e.currentTarget.classList.add('viewed'),ViewModalChanger(true),listItem=item}">
         <div class="list-item-info">
           <div class="info-item"><span class="title">Дата</span> {{ item.Date }}</div>
@@ -17,10 +18,13 @@
         </div>
       </div>
     </div>
-    <Paginator @page="e=>currentPage=e.page+1" :rows="10" :first="firstFromPage(currentPage, 10)"
-               :totalRecords="Tasks.length"
-               :rowsPerPageOptions="[10]"></Paginator>
-    <Modal v-if="ViewModalState" @closeModal="ViewModalChanger(false)">
+    <Paginator
+        class="paginator"
+        v-if="Tasks&&Tasks.length>0" @page="e=>currentPage=e.page+1" :rows="10"
+        :first="firstFromPage(currentPage, 10)"
+        :totalRecords="Tasks.length"
+        :rowsPerPageOptions="[10]"></Paginator>
+    <Modal v-if="ViewModalState" @closeModal="ViewModalChanger(false);SetViewed(listItem.id)">
       <div class="list-item-modal">
         <div class="list-item-info">
           <div class="info-item"><span class="title">Дата</span> {{ listItem.Date }}</div>
@@ -39,12 +43,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import Avatar from 'primevue/avatar';
-import Tag from 'primevue/tag';
-import Paginator from 'primevue/paginator';
 import {taskType} from "../types/global.types";
 
-const {ViewModalChanger} = useMain()
+const {ViewModalChanger, SetViewed} = useMain()
 const {preparedTaskList, Tasks, ViewModalState} = storeToRefs(useMain())
 const {query} = useRoute()
 const router = useRouter()
@@ -57,7 +58,7 @@ const Prepare = () => {
     }
   })
 }
-const listItem = ref<taskType>()
+const listItem = ref<taskType>({} as taskType)
 
 watch(currentPage, () => {
   Prepare()
@@ -114,7 +115,8 @@ const firstFromPage = (page: number, perPage: number): number => {
       }
 
       .info-item-text {
-        margin:15px 0 0;
+        margin: 15px 0 0;
+
         span {
           font-weight: 700;
           display: block;
@@ -146,19 +148,26 @@ const firstFromPage = (page: number, perPage: number): number => {
     border: 1px solid red;
   }
 }
-.viewed{
+
+.viewed {
   filter: brightness(0.5);
+}
+
+.paginator {
+  margin: 1em 0 0;
 }
 
 .list-item-modal {
   display: flex;
   flex-direction: column-reverse;
-  .list-item-info{
-    width:100%
+
+  .list-item-info {
+    width: 100%
   }
-  .info-item-text{
-    display:block !important;
-    overflow:auto;
+
+  .info-item-text {
+    display: block !important;
+    overflow: auto;
     max-height: 150px;
   }
 }

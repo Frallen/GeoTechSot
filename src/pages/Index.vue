@@ -20,9 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import Button from 'primevue/button';
-import ToggleButton from 'primevue/togglebutton';
-
 const viewState = ref<boolean>(true)
 const {PrepareTasks, TaskModalChanger} = useMain()
 const {Tasks} = storeToRefs(useMain())

@@ -72,23 +72,14 @@ export const useMain = defineStore('main', {
                         Priority: "Низкая",
                     },
                     {
-                        id:3,
+                        id: 3,
                         Date: format(new Date(), "dd/MM/yyyy"),
                         Device: "ЛВС",
                         Message: "Обрыв силового кабеля",
                         Owner: "Ветрова И.С.",
                         Priority: "Критическая",
                     }]
-               /* for (let i = 0; i <= 10; i++) {
-                    baseData.push({
-                        id: this.Tasks[this.Tasks.length-1].id+1,
-                        Date: format(new Date(), "dd/MM/yyyy"),
-                        Device: "ЛВС",
-                        Message: "Обрыв силового кабеля",
-                        Owner: "Ветрова И.С.",
-                        Priority: "Критическая",
-                    })
-                }*/
+
 
                 const {
                     get,
@@ -101,9 +92,7 @@ export const useMain = defineStore('main', {
                 const snap = get("task") as taskType[]
 
                 if (snap && snap.length > 0) {
-                    this.Tasks = [...baseData, ...snap]
-                } else {
-                    this.Tasks = [...baseData]
+                    this.Tasks = [...snap]
                 }
             } catch (e) {
                 this.isError = true
@@ -111,7 +100,7 @@ export const useMain = defineStore('main', {
         },
         async CreateTask(data: taskType) {
             try {
-                data.id = this.Tasks[this.Tasks.length-1].id+1??1
+                data.id = this.Tasks[this.Tasks.length - 1] ? this.Tasks[this.Tasks.length - 1].id + 1 : 1
                 data.Date = format(new Date(data.Date), "dd/MM/yyyy")
                 const {
                     get,
@@ -129,27 +118,33 @@ export const useMain = defineStore('main', {
                     set("task", [data])
                 }
                 this.PrepareTasks()
-                this.TaskModalState = false
+                this.TaskModalChanger(false)
             } catch (e) {
                 this.isError = true
             }
         },
         async SetViewed(id: number) {
-            const {
-                get,
-                getAll,
-                set,
-                remove,
-                addChangeListener,
-                removeChangeListener
-            } = useCookies(['task'], {doNotParse: false, autoUpdateDependencies: false})
-            const snap = get("task") as taskType[]
-            set("task", snap.map(p => {
-                if (p.id === id) {
-                    p.viewed = true
+            try {
+                const {
+                    get,
+                    getAll,
+                    set,
+                    remove,
+                    addChangeListener,
+                    removeChangeListener
+                } = useCookies(['task'], {doNotParse: false, autoUpdateDependencies: false})
+                const snap = get("task") as taskType[]
+                set("task", snap.map(p => {
+                    if (p.id === id) {
+                        p.viewed = true
+
+                    }
                     return p
-                }
-            }))
+                }))
+                this.PrepareTasks()
+            } catch (e) {
+                this.isError = true
+            }
         }
 
     }

@@ -15,22 +15,29 @@
     </template>
     <template #empty> No customers found.</template>
     <template #loading> Loading customers data. Please wait.</template>
-    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+    <Column selectionMode="single" headerStyle="width: 3rem"></Column>
     <Column field="Date" header="Дата"></Column>
     <Column field="Priority" header="Важность"></Column>
     <Column field="Device" header="Оборудование"></Column>
     <Column field="Message" header="Сообщение"></Column>
     <Column field="Owner" header="Ответственный"></Column>
+    <Column field="viewed" header="Просмотренно"></Column>
   </DataTable>
 </template>
 <script setup lang="ts">
 import {FilterMatchMode} from 'primevue/api';
 import {taskType} from "../types/global.types";
 
-const selectedRow = ref()
+const {SetViewed} = useMain()
+const selectedRow = ref<taskType>()
 const filters = ref({
   global: {value: null, matchMode: FilterMatchMode.CONTAINS},
 });
+
+watch(selectedRow, () => {
+  SetViewed(selectedRow.value?.id as number)
+
+})
 
 interface propsType {
   data: taskType[]
@@ -40,7 +47,7 @@ const {data} = defineProps<propsType>()
 
 </script>
 <style scoped lang="less">
-.search-end{
+.search-end {
   text-align: right;
 }
 </style>

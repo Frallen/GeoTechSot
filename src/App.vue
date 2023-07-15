@@ -7,8 +7,8 @@
           <component :is="Component"/>
         </suspense>
       </router-view>
-      <Modal :isShow="TaskModalState" v-show="TaskModalState" @closeModal="TaskModalChanger(false);">
-        <Form class="form" @submit="CreateTask"
+      <Modal v-show="TaskModalState" @closeModal="TaskModalChanger(false);">
+        <Form class="form" @submit="onSubmit"
               v-slot="{ setFieldValue, setValues }"
               :validation-schema="TaskSchema()">
 
@@ -78,8 +78,14 @@ const formValues = reactive<taskType>({
   Device: "",
   Message: "",
   Owner: "",
-  id:1,
+  id: 1,
 })
+const onSubmit = (values: taskType, {resetForm}: any): void => {
+  CreateTask(values)
+  resetForm()
+  formValues.Date = ""
+  formValues.Priority = "Низкая"
+}
 
 
 </script>

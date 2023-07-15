@@ -1,22 +1,37 @@
 <template>
   <div>
     <div class="list">
-      <div class="list-item" :class="{'viewed':item.viewed}" v-for="item in preparedTaskList(currentPage)"
-           :key="item.id"
-           @click="e=>{e.currentTarget.classList.add('viewed'),ViewModalChanger(true),listItem=item}">
-        <div class="list-item-info">
-          <div class="info-item"><span class="title">Дата</span> {{ item.Date }}</div>
-          <div class="info-item"><span class="title">Оборудование</span> {{ item.Device }}</div>
-          <div class="info-item"><span class="title">Важность</span>
-            <Tag :severity="styledPriority(item.Priority)" :value="item.Priority"></Tag>
-          </div>
-          <div class="info-item-text"><span class="title">Сообщение</span> {{ item.Message }}</div>
-        </div>
-        <div class="list-item-photo">
-          <Avatar label="P" size="xlarge" shape="circle"/>
-          <div class="name">{{ item.Owner }}</div>
-        </div>
-      </div>
+      <transition-group name="fade">
+        <Card class="list-item" :tabindex="item.id" @keydown.space.prevent="SetViewed(item.id)"
+              :class="{'viewed':item.viewed}"
+              v-for="item in preparedTaskList(currentPage)"
+              :key="item.id"
+        >
+          <template #header>
+            <div class="list-item-photo">
+              <Avatar label="P" size="xlarge" shape="circle"/>
+
+            </div>
+          </template>
+          <template #title>
+            <div class="name">{{ item.Owner }}</div>
+          </template>
+          <template #subtitle> Card subtitle</template>
+          <template #content>
+            <div class="list-item-info">
+              <div class="info-item"><span class="title">Дата</span> {{ item.Date }}</div>
+              <div class="info-item"><span class="title">Оборудование</span> {{ item.Device }}</div>
+              <div class="info-item"><span class="title">Важность</span>
+                <Tag :severity="styledPriority(item.Priority)" :value="item.Priority"></Tag>
+              </div>
+              <div class="info-item-text"><span class="title">Сообщение</span> {{ item.Message }}</div>
+            </div>
+          </template>
+          <template #footer>
+            <Button label="Окрыть" @click="ViewModalChanger(true),listItem=item" style="width: 100%"/>
+          </template>
+        </Card>
+      </transition-group>
     </div>
     <Paginator
         class="paginator"
@@ -24,7 +39,7 @@
         :first="firstFromPage(currentPage, 10)"
         :totalRecords="Tasks.length"
         :rowsPerPageOptions="[10]"></Paginator>
-    <Modal v-if="ViewModalState" @closeModal="ViewModalChanger(false);SetViewed(listItem.id)">
+    <Modal v-if="ViewModalState" @closeModal="ViewModalChanger(false);">
       <div class="list-item-modal">
         <div class="list-item-info">
           <div class="info-item"><span class="title">Дата</span> {{ listItem.Date }}</div>
@@ -79,12 +94,16 @@ const firstFromPage = (page: number, perPage: number): number => {
   &-item {
     padding: 15px 10px;
     margin: 15px 0 0 15px;
-    width: 400px;
+    color: @black;
     .br(15px);
+    width: calc(100% / 4 - 15px);
     background: #fff;
-    box-shadow: 0 2px 3px 0 #333;
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+    user-select: none;
+    .trs(0.3s);
+    @media @xl {
+      width: calc(100% / 3 - 15px);
+    }
     @media @lg {
       width: calc(100% / 2 - 15px);
     }
@@ -94,22 +113,18 @@ const firstFromPage = (page: number, perPage: number): number => {
     }
 
     &-info {
-      width: 68%;
       @media @sm {
         width: 100%;
         margin: 1em 0 0 0;
       }
 
       .info-item {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: flex;
         justify-content: space-between;
         width: 100%;
-        gap: 10px;
         margin: 1em 0 0 0;
 
         .title {
-          width: 50%;
           font-weight: 700;
         }
       }
@@ -131,10 +146,8 @@ const firstFromPage = (page: number, perPage: number): number => {
 
     &-photo {
       text-align: center;
-      width: 30%;
       @media @sm {
         width: 100%;
-        text-align: right;
       }
 
       .name {
@@ -145,7 +158,10 @@ const firstFromPage = (page: number, perPage: number): number => {
   }
 
   &-item:focus {
-    border: 1px solid red;
+    .trs(0.3s);
+    outline: none;
+    box-shadow: 0 0 5px #6366F1;
+    transform: scale(0.9);
   }
 }
 
